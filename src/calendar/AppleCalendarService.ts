@@ -23,6 +23,7 @@ interface AppleCalendarRaw {
   id: string
   name: string
   color?: string
+  accountTitle?: string
 }
 
 export class AppleCalendarService implements CalendarService {
@@ -225,6 +226,7 @@ export class AppleCalendarService implements CalendarService {
         name: raw.name,
         color: raw.color,
         source: 'apple' as const,
+        accountTitle: raw.accountTitle,
       }))
     } catch (error) {
       console.error('Error fetching Apple Calendars:', error)

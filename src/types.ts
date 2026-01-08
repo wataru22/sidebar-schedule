@@ -16,6 +16,7 @@ export interface Calendar {
     name: string;
     color?: string;
     source: 'apple';
+    accountTitle?: string;
 }
 
 export interface SchedulePluginSettings {

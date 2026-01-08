@@ -153,40 +153,71 @@ export class ScheduleSettingsTab extends PluginSettingTab {
         cls: 'setting-item-name',
       })
 
+      // Group calendars by account
+      const calendarsByAccount = new Map<string, Calendar[]>()
       for (const calendar of this.appleCalendars) {
-        new Setting(calendarContainer)
-          .setName(calendar.name)
-          .addToggle((toggle) =>
-            toggle
-              .setValue(
-                this.plugin.settings.selectedAppleCalendars.includes(
-                  calendar.id
+        const account = calendar.accountTitle || 'Other'
+        if (!calendarsByAccount.has(account)) {
+          calendarsByAccount.set(account, [])
+        }
+        calendarsByAccount.get(account)!.push(calendar)
+      }
+
+      // Sort accounts alphabetically
+      const sortedAccounts = Array.from(calendarsByAccount.keys()).sort()
+
+      // Render each account group
+      for (const account of sortedAccounts) {
+        const accountCalendars = calendarsByAccount.get(account)!
+
+        // Account header
+        const accountHeader = calendarContainer.createDiv({
+          cls: 'schedule-account-header',
+        })
+        accountHeader.createEl('h4', {
+          text: account,
+          cls: 'schedule-account-title',
+        })
+
+        // Calendars for this account
+        for (const calendar of accountCalendars) {
+          new Setting(calendarContainer)
+            .setName(calendar.name)
+            .addToggle((toggle) =>
+              toggle
+                .setValue(
+                  this.plugin.settings.selectedAppleCalendars.includes(
+                    calendar.id
+                  )
                 )
-              )
-              .onChange(async (value) => {
-                if (value) {
-                  if (
-                    !this.plugin.settings.selectedAppleCalendars.includes(
-                      calendar.id
-                    )
-                  ) {
-                    this.plugin.settings.selectedAppleCalendars.push(
-                      calendar.id
-                    )
+                .onChange(async (value) => {
+                  if (value) {
+                    if (
+                      !this.plugin.settings.selectedAppleCalendars.includes(
+                        calendar.id
+                      )
+                    ) {
+                      this.plugin.settings.selectedAppleCalendars.push(
+                        calendar.id
+                      )
+                    }
+                  } else {
+                    const index =
+                      this.plugin.settings.selectedAppleCalendars.indexOf(
+                        calendar.id
+                      )
+                    if (index > -1) {
+                      this.plugin.settings.selectedAppleCalendars.splice(
+                        index,
+                        1
+                      )
+                    }
                   }
-                } else {
-                  const index =
-                    this.plugin.settings.selectedAppleCalendars.indexOf(
-                      calendar.id
-                    )
-                  if (index > -1) {
-                    this.plugin.settings.selectedAppleCalendars.splice(index, 1)
-                  }
-                }
-                await this.plugin.saveSettings()
-                this.plugin.updateCalendarSelection()
-              })
-          )
+                  await this.plugin.saveSettings()
+                  this.plugin.updateCalendarSelection()
+                })
+            )
+        }
       }
     } catch (error) {
       await this.showCalendarAccessPrompt(
