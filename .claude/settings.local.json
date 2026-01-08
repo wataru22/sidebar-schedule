@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.obsidian.md)",
+      "WebFetch(domain:yukigasai.github.io)",
+      "WebFetch(domain:marcusolsson.github.io)",
+      "Bash(bun install)",
+      "Bash(bun run build)",
+      "Bash(swift build:*)",
+      "Bash(chmod:*)",
+      "Bash(/Users/w22/Projects/obsidian/schedule/calendar-bridge calendars:*)"
+    ]
+  }
+}

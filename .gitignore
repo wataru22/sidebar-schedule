@@ -1,0 +1,21 @@
+# Build output
+main.js
+*.js.map
+
+# Dependencies
+node_modules/
+
+# Swift build
+native/calendar-bridge/.build/
+calendar-bridge
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Plugin data
+data.json

@@ -1,0 +1,30 @@
+{
+  "name": "obsidian-schedule-plugin",
+  "version": "1.0.0",
+  "description": "Calendar integration plugin for Obsidian with Apple and Google Calendar sync",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "build:swift": "cd native/calendar-bridge && swift build -c release && cp .build/release/calendar-bridge ../../calendar-bridge"
+  },
+  "keywords": [
+    "obsidian",
+    "calendar",
+    "schedule",
+    "apple-calendar",
+    "google-calendar"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "^0.20.0",
+    "obsidian": "latest",
+    "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "date-fns": "^3.3.0"
+  }
+}
