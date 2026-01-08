@@ -1,7 +1,7 @@
 {
   "name": "obsidian-schedule-plugin",
   "version": "1.0.0",
-  "description": "Calendar integration plugin for Obsidian with Apple and Google Calendar sync",
+  "description": "Calendar integration plugin for Obsidian with local calendar sync",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
@@ -12,8 +12,7 @@
     "obsidian",
     "calendar",
     "schedule",
-    "apple-calendar",
-    "google-calendar"
+    "apple-calendar"
   ],
   "author": "",
   "license": "MIT",

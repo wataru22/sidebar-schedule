@@ -3,7 +3,7 @@
   "name": "Schedule",
   "version": "1.0.0",
   "minAppVersion": "1.0.0",
-  "description": "A vertical, scrollable calendar view that syncs with Apple Calendar and Google Calendar",
+  "description": "A vertical, scrollable calendar view that syncs with local calendars",
   "author": "",
   "isDesktopOnly": true
 }
