@@ -1,9 +1,9 @@
 {
   "id": "obsidian-schedule",
-  "name": "Schedule",
+  "name": "Sidebar Schedule",
   "version": "1.0.0",
   "minAppVersion": "1.0.0",
   "description": "A vertical, scrollable calendar view that syncs with local calendars",
-  "author": "",
+  "author": "Wataru Watanabe",
   "isDesktopOnly": true
 }

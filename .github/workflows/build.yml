@@ -1,0 +1,30 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      
+      - name: Install dependencies
+        run: bun install
+      
+      - name: Type check
+        run: bun run build --dry-run || tsc --noEmit --skipLibCheck
+      
+      - name: Build Swift binary
+        run: bun run build:swift
+      
+      - name: Build plugin
+        run: bun run build

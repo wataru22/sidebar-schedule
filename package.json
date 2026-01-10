@@ -1,7 +1,7 @@
 {
-  "name": "obsidian-schedule-plugin",
+  "name": "sidebar-schedule",
   "version": "1.0.0",
-  "description": "Calendar integration plugin for Obsidian with local calendar sync",
+  "description": "Calendar integration plugin for Obsidian sidebar with local calendar sync",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
@@ -14,7 +14,7 @@
     "schedule",
     "apple-calendar"
   ],
-  "author": "",
+  "author": "Wataru Watanabe",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.0.0",

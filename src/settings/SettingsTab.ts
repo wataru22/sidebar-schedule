@@ -74,10 +74,10 @@ export class ScheduleSettingsTab extends PluginSettingTab {
 
     // === Apple Calendar Settings ===
     if (process.platform === 'darwin') {
-      containerEl.createEl('h3', { text: 'Apple Calendar' })
+      containerEl.createEl('h3', { text: 'Calendar' })
 
       new Setting(containerEl)
-        .setName('Enable Apple Calendar')
+        .setName('Enable Calendar')
         .setDesc('Sync events from macOS Calendar app')
         .addToggle((toggle) =>
           toggle
