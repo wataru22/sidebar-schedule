@@ -3,7 +3,7 @@
   "name": "Sidebar Schedule",
   "version": "1.0.0",
   "minAppVersion": "1.0.0",
-  "description": "A vertical, scrollable calendar view that syncs with local calendars",
+  "description": "A vertical, scrollable calendar view that syncs with local macOS calendars (Apple Calendar)",
   "author": "Wataru Watanabe",
   "isDesktopOnly": true
 }

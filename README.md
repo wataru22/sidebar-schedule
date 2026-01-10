@@ -1,13 +1,13 @@
 # Sidebar Schedule for Obsidian
 
-A vertical, scrollable calendar view that syncs with local calendars (Apple Calendar, Google Calendar).
+A vertical, scrollable calendar view that syncs with local macOS calendars (Apple Calendar). Google Calendar support coming soon.
 
 [!["Buy Me A Coffee"](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=GJdybxNt6&button_colour=FFDD00&font_colour=000000&font_family=Poppins&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/GJdybxNt6)
 
 ## Features
 
 - 📅 Vertical, scrollable calendar view
-- 🔄 Sync with local calendars (Apple Calendar, Google Calendar)
+- 🔄 Sync with local macOS calendars (Apple Calendar) - Google Calendar support coming soon
 - 📱 Desktop-only support (macOS)
 
 ## Installation
