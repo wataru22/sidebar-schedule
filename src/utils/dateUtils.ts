@@ -100,4 +100,10 @@ export function parseDateString(dateStr: string): Date {
     return new Date(dateStr);
 }
 
+export function parseDateKey(dateKey: string): Date {
+    // Parse yyyy-MM-dd as local date, not UTC
+    const [year, month, day] = dateKey.split('-').map(Number);
+    return new Date(year, month - 1, day);
+}
+
 export { isToday, isTomorrow, isSameDay, startOfDay, addDays };

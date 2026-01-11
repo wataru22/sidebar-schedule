@@ -7,6 +7,7 @@ import {
     getDateKey,
     groupEventsByDate,
     getDateRange,
+    parseDateKey,
 } from '../utils/dateUtils';
 
 export const VIEW_TYPE_SCHEDULE = 'schedule-view';
@@ -153,7 +154,7 @@ export class ScheduleView extends ItemView {
 
             // Date header
             const dateHeader = dateSection.createDiv({ cls: 'schedule-date-header' });
-            const date = new Date(dateKey);
+            const date = parseDateKey(dateKey);
             dateHeader.createSpan({ text: formatDateHeader(date) });
 
             // Events for this date
@@ -166,24 +167,33 @@ export class ScheduleView extends ItemView {
     private renderEventItem(container: HTMLElement, event: CalendarEvent): void {
         const eventEl = container.createDiv({ cls: 'schedule-event-item' });
 
-        // Time
-        const timeEl = eventEl.createDiv({ cls: 'schedule-event-time' });
-        if (event.isAllDay) {
-            timeEl.setText('All day');
-        } else {
-            timeEl.setText(formatTime(event.startDate, this.settings.timeFormat === '24h'));
-        }
-
-        // Color indicator
+        // Color indicator (first, on the left)
         if (this.settings.showCalendarColors && event.calendarColor) {
             const colorIndicator = eventEl.createDiv({ cls: 'schedule-event-color' });
             colorIndicator.style.backgroundColor = event.calendarColor;
         }
 
-        // Content
+        // Content container
         const contentEl = eventEl.createDiv({ cls: 'schedule-event-content' });
+
+        // Time
+        const timeEl = contentEl.createDiv({ cls: 'schedule-event-time' });
+        if (event.isAllDay) {
+            timeEl.setText('All day');
+        } else {
+            const startTime = formatTime(event.startDate, this.settings.timeFormat === '24h');
+            if (event.endDate && event.endDate.getTime() !== event.startDate.getTime()) {
+                const endTime = formatTime(event.endDate, this.settings.timeFormat === '24h');
+                timeEl.setText(`${startTime} - ${endTime}`);
+            } else {
+                timeEl.setText(startTime);
+            }
+        }
+
+        // Title
         contentEl.createDiv({ cls: 'schedule-event-title', text: event.title });
 
+        // Location
         if (event.location) {
             const locationEl = contentEl.createDiv({ cls: 'schedule-event-location' });
             setIcon(locationEl.createSpan(), 'map-pin');
