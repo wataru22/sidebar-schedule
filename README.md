@@ -14,10 +14,7 @@ A vertical, scrollable calendar view that syncs with local macOS calendars (Appl
 
 ### From Obsidian Community Plugins
 
-1. Open Obsidian Settings
-2. Go to Community Plugins
-3. Search for "Sidebar Schedule"
-4. Click Install
+- **STILL UNDER DEVELOPMENT**
 
 ### Manual Installation
 
