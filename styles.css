@@ -467,7 +467,7 @@
 }
 
 .schedule-calendar-nav-btn:hover {
-  color: var(--text-normal);
+  color: var(--text-accent);
   background: transparent !important;
 }
 
