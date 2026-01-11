@@ -94,6 +94,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 .schedule-scroll-container {
@@ -411,4 +412,158 @@
 
 .schedule-scroll-container::-webkit-scrollbar-thumb:hover {
   background: var(--background-modifier-border-hover);
+}
+
+/* Calendar */
+.schedule-calendar {
+  flex-shrink: 0;
+  padding: 12px 16px;
+  border-top: 1px solid var(--background-modifier-border);
+  background: transparent;
+}
+
+.schedule-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.schedule-calendar-month-year {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.schedule-calendar-month {
+  font-size: 15px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.schedule-calendar-year {
+  font-size: 15px;
+  color: var(--text-accent);
+  font-weight: 500;
+}
+
+.schedule-calendar-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.schedule-calendar-nav-btn {
+  background: transparent !important;
+  border: none !important;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 0;
+  transition: color 0.15s ease;
+  line-height: 1.4;
+  box-shadow: none !important;
+}
+
+.schedule-calendar-nav-btn:hover {
+  color: var(--text-normal);
+  background: transparent !important;
+}
+
+.schedule-calendar-today {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  background: transparent !important;
+  border: none !important;
+}
+
+.schedule-calendar-grid {
+  display: grid;
+  grid-template-columns: 20px repeat(7, 1fr);
+  gap: 0 2px;
+  font-size: 11px;
+  width: 100%;
+}
+
+.schedule-calendar-day-header {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 0;
+  line-height: 1.2;
+}
+
+.schedule-calendar-week {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 10px;
+  padding: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  line-height: 1;
+  padding-top: 3px;
+  min-height: 28px;
+  border-right: 1px solid var(--background-modifier-border);
+}
+
+.schedule-calendar-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2px;
+  cursor: pointer;
+  border-radius: 0;
+  position: relative;
+  transition: background 0.15s ease;
+  min-height: 28px;
+  height: 28px;
+}
+
+.schedule-calendar-date:hover {
+  background: var(--background-modifier-hover);
+}
+
+.schedule-calendar-date-other {
+  color: var(--text-faint);
+}
+
+.schedule-calendar-date-today {
+  background: transparent;
+}
+
+.schedule-calendar-date-today .schedule-calendar-date-num {
+  color: var(--text-accent);
+  font-weight: 500;
+}
+
+.schedule-calendar-date-num {
+  font-size: 11px;
+  line-height: 1;
+  padding-top: 3px;
+  text-align: center;
+  width: 100%;
+  color: var(--text-normal);
+  height: 11px;
+}
+
+.schedule-calendar-date-other .schedule-calendar-date-num {
+  color: var(--text-faint);
+}
+
+.schedule-calendar-date-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.schedule-calendar-date-today .schedule-calendar-date-dot {
+  background: var(--text-accent);
 }

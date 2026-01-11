@@ -9,6 +9,18 @@ import {
     getDateRange,
     parseDateKey,
 } from '../utils/dateUtils';
+import {
+    startOfMonth,
+    startOfWeek,
+    eachDayOfInterval,
+    format,
+    isSameMonth,
+    isToday,
+    addMonths,
+    subMonths,
+    getWeek,
+    addDays,
+} from 'date-fns';
 
 export const VIEW_TYPE_SCHEDULE = 'schedule-view';
 
@@ -17,6 +29,7 @@ export class ScheduleView extends ItemView {
     private settings: SchedulePluginSettings;
     private events: CalendarEvent[] = [];
     private isLoading = false;
+    private currentMonth: Date = new Date();
 
     constructor(
         leaf: WorkspaceLeaf,
@@ -67,6 +80,9 @@ export class ScheduleView extends ItemView {
 
         // Load and render events
         await this.loadAndRenderEvents(contentEl);
+
+        // Calendar at the bottom
+        this.renderCalendar(container);
     }
 
     private renderHeader(container: HTMLElement): void {
@@ -114,6 +130,12 @@ export class ScheduleView extends ItemView {
             } else {
                 const scrollContainer = container.createDiv({ cls: 'schedule-scroll-container' });
                 this.renderEventList(scrollContainer);
+            }
+
+            // Refresh calendar with updated events
+            const calendarEl = this.containerEl.querySelector('.schedule-calendar');
+            if (calendarEl) {
+                this.renderCalendar(this.containerEl.children[1] as HTMLElement);
             }
         } catch (error) {
             console.error('Error loading events:', error);
@@ -206,6 +228,121 @@ export class ScheduleView extends ItemView {
         const contentEl = this.containerEl.querySelector('.schedule-content');
         if (contentEl) {
             await this.loadAndRenderEvents(contentEl as HTMLElement);
+        }
+        // Refresh calendar
+        const calendarEl = this.containerEl.querySelector('.schedule-calendar');
+        if (calendarEl) {
+            this.renderCalendar(this.containerEl.children[1] as HTMLElement);
+        }
+    }
+
+    private renderCalendar(container: HTMLElement): void {
+        // Remove existing calendar if present
+        const existingCalendar = container.querySelector('.schedule-calendar');
+        if (existingCalendar) {
+            existingCalendar.remove();
+        }
+
+        const calendarEl = container.createDiv({ cls: 'schedule-calendar' });
+
+        // Header with month/year and navigation
+        const header = calendarEl.createDiv({ cls: 'schedule-calendar-header' });
+        
+        const monthYear = header.createDiv({ cls: 'schedule-calendar-month-year' });
+        monthYear.createSpan({ 
+            text: format(this.currentMonth, 'MMM'),
+            cls: 'schedule-calendar-month'
+        });
+        monthYear.createSpan({ 
+            text: format(this.currentMonth, 'yyyy'),
+            cls: 'schedule-calendar-year'
+        });
+
+        const nav = header.createDiv({ cls: 'schedule-calendar-nav' });
+        const prevBtn = nav.createEl('button', {
+            cls: 'schedule-calendar-nav-btn',
+            attr: { 'aria-label': 'Previous month' }
+        });
+        prevBtn.setText('<');
+        prevBtn.addEventListener('click', () => {
+            this.currentMonth = subMonths(this.currentMonth, 1);
+            this.renderCalendar(container);
+        });
+
+        const todayBtn = nav.createEl('button', {
+            cls: 'schedule-calendar-nav-btn schedule-calendar-today',
+            text: 'TODAY'
+        });
+        todayBtn.addEventListener('click', () => {
+            this.currentMonth = new Date();
+            this.renderCalendar(container);
+        });
+
+        const nextBtn = nav.createEl('button', {
+            cls: 'schedule-calendar-nav-btn',
+            attr: { 'aria-label': 'Next month' }
+        });
+        nextBtn.setText('>');
+        nextBtn.addEventListener('click', () => {
+            this.currentMonth = addMonths(this.currentMonth, 1);
+            this.renderCalendar(container);
+        });
+
+        // Calendar grid
+        const grid = calendarEl.createDiv({ cls: 'schedule-calendar-grid' });
+
+        // Day headers
+        const dayHeaders = ['W', 'SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+        dayHeaders.forEach(day => {
+            const headerCell = grid.createDiv({ cls: 'schedule-calendar-day-header' });
+            headerCell.setText(day);
+        });
+
+        // Get calendar days - always show exactly 6 weeks (42 days)
+        const monthStart = startOfMonth(this.currentMonth);
+        const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 });
+        // Always show 6 weeks = 42 days
+        const days = eachDayOfInterval({ 
+            start: calendarStart, 
+            end: addDays(calendarStart, 41) 
+        });
+
+        // Group events by date
+        const eventsByDate = groupEventsByDate(this.events);
+
+        // Render exactly 6 weeks
+        for (let weekIndex = 0; weekIndex < 6; weekIndex++) {
+            const weekStart = addDays(calendarStart, weekIndex * 7);
+            const weekDays = eachDayOfInterval({ 
+                start: weekStart, 
+                end: addDays(weekStart, 6) 
+            });
+
+            // Week number (first day of week)
+            const weekNum = getWeek(weekStart, { weekStartsOn: 0, firstWeekContainsDate: 4 });
+            const weekCell = grid.createDiv({ cls: 'schedule-calendar-week' });
+            weekCell.setText(weekNum.toString());
+
+            // Date cells for this week
+            weekDays.forEach(day => {
+                const dateCell = grid.createDiv({ 
+                    cls: 'schedule-calendar-date' + 
+                        (!isSameMonth(day, this.currentMonth) ? ' schedule-calendar-date-other' : '') +
+                        (isToday(day) ? ' schedule-calendar-date-today' : '')
+                });
+                
+                const dateNum = dateCell.createSpan({ 
+                    cls: 'schedule-calendar-date-num',
+                    text: format(day, 'd')
+                });
+
+                // Show dot if there are events on this day
+                const dateKey = getDateKey(day);
+                const dayEvents = eventsByDate.get(dateKey);
+                if (dayEvents && dayEvents.length > 0) {
+                    const dot = dateCell.createDiv({ cls: 'schedule-calendar-date-dot' });
+                }
+            });
         }
     }
 }
