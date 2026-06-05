@@ -123,6 +123,12 @@ export class ScheduleView extends ItemView {
                 this.events = this.events.filter(e => !e.isAllDay);
             }
 
+            // Drop events before today so past dates never appear above Today
+            const todayKey = getDateKey(new Date());
+            this.events = this.events.filter(
+                (event) => getDateKey(event.startDate) >= todayKey
+            );
+
             container.empty();
 
             if (this.events.length === 0) {
@@ -166,24 +172,43 @@ export class ScheduleView extends ItemView {
 
     private renderEventList(container: HTMLElement): void {
         const groupedEvents = groupEventsByDate(this.events);
-        const sortedDates = Array.from(groupedEvents.keys()).sort();
+        const todayKey = getDateKey(new Date());
+
+        const sortedDates = Array.from(groupedEvents.keys())
+            .filter((dateKey) => dateKey >= todayKey)
+            .sort();
+
+        if (!sortedDates.includes(todayKey)) {
+            sortedDates.unshift(todayKey);
+        } else if (sortedDates[0] !== todayKey) {
+            sortedDates.splice(sortedDates.indexOf(todayKey), 1);
+            sortedDates.unshift(todayKey);
+        }
 
         for (const dateKey of sortedDates) {
-            const events = groupedEvents.get(dateKey);
-            if (!events || events.length === 0) continue;
-
-            const dateSection = container.createDiv({ cls: 'schedule-date-section' });
-
-            // Date header
-            const dateHeader = dateSection.createDiv({ cls: 'schedule-date-header' });
+            const events = groupedEvents.get(dateKey) || [];
             const date = parseDateKey(dateKey);
+
+            const dateSection = container.createDiv({
+                cls: 'schedule-date-section' + (isToday(date) ? ' schedule-date-section-today' : ''),
+            });
+
+            const dateHeader = dateSection.createDiv({ cls: 'schedule-date-header' });
             dateHeader.createSpan({ text: formatDateHeader(date) });
 
-            // Events for this date
             for (const event of events) {
                 this.renderEventItem(dateSection, event);
             }
         }
+
+        requestAnimationFrame(() => {
+            const todaySection = container.querySelector('.schedule-date-section-today');
+            if (todaySection) {
+                todaySection.scrollIntoView({ block: 'start' });
+            } else {
+                container.scrollTop = 0;
+            }
+        });
     }
 
     private renderEventItem(container: HTMLElement, event: CalendarEvent): void {
